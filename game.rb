@@ -1,6 +1,5 @@
 require "gosu"
-require_relative "player"
-
+require_relative "character"
 class Game < Gosu::Window
 
 	def initialize 
@@ -8,7 +7,7 @@ class Game < Gosu::Window
 		@background = Gosu::Image.new("background.png")
 		@change_x = 0
 		@change_y = -960
-		@player = Player.new(@change_x, @change_y, 1320, 20)
+		@guy = Character.new(20, 1320, 100, 50, Gosu::Image.new("guy.png"), 50, 100, 10, 3)
 	end
 
 	def update
@@ -24,16 +23,23 @@ class Game < Gosu::Window
 		if self.mouse_y > 440 && self.mouse_y < 480 && @change_y > -960 
 			@change_y -= 3
 		end
-		@player.setChange(@change_x, @change_y)
+		@guy.update(@change_x, @change_y)
 	end
 
 	def draw
 		@background.draw(@change_x, @change_y, 0)
-		@player.draw
+		@guy.draw
 	end
 
 	def needs_cursor?
 		true
+	end
+
+	def button_down(id)
+		case id 
+			when Gosu::MsRight
+				@guy.setMoveTo(self.mouse_x, self.mouse_y)
+		end
 	end
 
 end
