@@ -4,20 +4,20 @@ class Character
 
 	attr_reader :x, :y, :width, :height, :image, :attack, :defense, :range, :speed
 
-	def initialize(x, y, width, height, image, attack, defense, range, speed)
+	def initialize(x, y, width, height, image, attack, health, range, speed)
 		@x = x
 		@y = y
 		@width = width
 		@height = height
 		@image = image
 		@attack = attack
-		@defense = defense
+		@health = health
 		@range = range
 		@speed = speed
 		@change_x = 0
 		@change_y = 0
-		@move_x = 0
-		@move_y = 0
+		@move_x = x
+		@move_y = y
 	end
 
 	def draw
@@ -30,36 +30,46 @@ class Character
 	end
 
 	def setMoveTo(move_x, move_y)
-		@move_x = move_x
-		@move_y = move_y
+		@move_x = move_x - @change_x
+		@move_y = move_y - @change_y
 	end
 
 	def move
-		if @move_x > @x 
+		puts "#{x}, #{y}, #{@move_x}, #{@move_y}"
+		if @x < @move_x
 			@x += speed
 		end
-		if @move_x < @x 
+		if @x > @move_x
 			@x -= speed
 		end
-		if @move_y > @y 
+		if @y < @move_y
 			@y += speed
 		end
-		if @move_y > @y
+		if @y > @move_y
 			@y -= speed
 		end
-		if @move_x < @x + speed || @move_x > @x - speed
-			@move_x = 0
-		end
-		if @move_y < @y + speed || @move_y > @y - speed
-			@move_y = 0
-		end
 	end	
+
 
 	def setChange(change_x, change_y)
 		@change_x = change_x
 		@change_y = change_y
-		puts @x + @change_x
-		puts @y + @change_y
+	end
+
+	def getX
+		@x
+	end
+
+	def getY
+		@y
+	end
+
+	def getWidth
+		@width
+	end
+
+	def getHeight
+		@height
 	end
 
 end
