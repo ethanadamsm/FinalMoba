@@ -8,8 +8,9 @@ class Game < Gosu::Window
 		@background = Gosu::Image.new("background.png")
 		@change_x = 0
 		@change_y = -960
+		@minions = []
 		@guy = Character.new(20, 1320, 100, 50, Gosu::Image.new("guy.png"), 50, 100, 10, 3)
-		@minion = Minion.new(40, 40, "top", 1, Gosu::Image.new("minion.png"))
+		@minions.push(Minion.new(40, 40, "top", 1, Gosu::Image.new("minion.png"), 1))
 	end
 
 	def update
@@ -25,14 +26,18 @@ class Game < Gosu::Window
 		if self.mouse_y > 440 && self.mouse_y < 480 && @change_y > -960 
 			@change_y -= 7
 		end
-		@guy.update(@change_x, @change_y)
-		@minion.update(@change_x, @change_y, @guy)
+		@guy.update(@change_x, @change_y, 1, @minions)
+		@minions.each do |minion|
+			minion.update(@change_x, @change_y, @guy)
+		end
 	end
 
 	def draw
 		@background.draw(@change_x, @change_y, 0)
 		@guy.draw
-		@minion.draw
+		@minions.each do |minion|
+			minion.draw
+		end
 	end
 
 	def needs_cursor?
