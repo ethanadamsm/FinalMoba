@@ -1,4 +1,5 @@
 require "gosu"
+require_relative "healthbar"
 
 class Character
 
@@ -18,15 +19,19 @@ class Character
 		@change_y = 0
 		@move_x = x
 		@move_y = y
+		@healthbar = Healthbar.new(health)
 	end
 
 	def draw
 		@image.draw(@x + @change_x, @y + @change_y, 1)
+		@healthbar.draw
 	end
 
-	def update(change_x, change_y)
+	def update(change_x, change_y, players, minions)
 		setChange(change_x, change_y)
 		move
+		battle(players, minions)
+		@healthbar.update(@x - 10 + @change_x, @y - 30 + @change_y)
 	end
 
 	def setMoveTo(move_x, move_y)
@@ -35,7 +40,6 @@ class Character
 	end
 
 	def move
-		puts "#{x}, #{y}, #{@move_x}, #{@move_y}"
 		if @x < @move_x
 			@x += speed
 		end
@@ -54,6 +58,16 @@ class Character
 	def setChange(change_x, change_y)
 		@change_x = change_x
 		@change_y = change_y
+	end
+
+	def battle(players, minions)
+		minions.each do |minion|
+			if minion.getX - 5 < @x + @width && minion.getX + 45 > @x && minion.getY - 5 < @y + @height && minion.getY + 45 > @y
+				if @healthbar.getHealth > 0
+					@healthbar.changehealth(-0.25)
+				end
+			end
+		end
 	end
 
 	def getX
