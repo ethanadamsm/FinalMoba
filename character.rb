@@ -62,9 +62,9 @@ class Character
 
 	def battle(players, minions)
 		minions.each do |minion|
-			if minion.getX - 5 < @x + @width && minion.getX + 45 > @x && minion.getY - 5 < @y + @height && minion.getY + 45 > @y
+			if minion.getX - 30 < @x + @width && minion.getX + 70 > @x && minion.getY - 30 < @y + @height && minion.getY + 70 > @y
 				if @healthbar.getHealth > 0
-					@healthbar.changehealth(-0.25)
+					@healthbar.changehealth(-0.05)
 				end
 			end
 		end
@@ -84,6 +84,15 @@ class Character
 
 	def getHeight
 		@height
+	end
+
+	def teleport(x, y)
+		@x = x
+		@y = y
+	end
+
+	def addHealth(value)
+		@healthbar.changehealth(value)
 	end
 
 end
