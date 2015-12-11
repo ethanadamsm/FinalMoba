@@ -11,6 +11,9 @@ class Game < Gosu::Window
 		@minions = []
 		@guy = Character.new(20, 1320, 100, 50, Gosu::Image.new("guy.png"), 50, 100, 10, 3)
 		@minions.push(Minion.new(40, 40, "top", 1, Gosu::Image.new("minion.png"), 1))
+		@frames = 0
+		@back = 0
+		@backing = false
 	end
 
 	def update
@@ -29,7 +32,28 @@ class Game < Gosu::Window
 		@guy.update(@change_x, @change_y, 1, @minions)
 		@minions.each do |minion|
 			minion.update(@change_x, @change_y, @guy)
+			if minion.getHealth == 0
+				@minions.delete(minion)
+			end
 		end
+		@frames += 1
+		if @frames % 200 == 0
+			@minions.push(Minion.new(40, 40, "top", 1, Gosu::Image.new("minion.png"), 1))
+		end
+		if @backing
+			@back += 1 
+		end
+		if @back % 300 == 0 && @back > 0
+			@guy.teleport(20, 1320)
+			@backing = false
+			@back = 0
+			@guy.setChange(0, 0)
+			@guy.setMoveTo(@guy.getX, @guy.getY)
+		end
+		if @guy.getX > 0 && @guy.getX + 50 < 150 && @guy.getY + 100 < 1440 && @guy.getY > 1290
+			@guy.addHealth(1)
+		end 
+		puts @back
 	end
 
 	def draw
@@ -48,6 +72,19 @@ class Game < Gosu::Window
 		case id 
 			when Gosu::MsRight
 				@guy.setMoveTo(self.mouse_x, self.mouse_y)
+			when Gosu::KbB
+				if @move != 0
+					puts "reseting"
+					@move = 0
+				else 
+					@backing = true
+					@guy.setChange(0, 0)
+					@guy.setMoveTo(@guy.getX, @guy.getY)
+					puts @guy.getX
+				end
+			when Gosu::KbSpace
+				@change_x = @guy.getX 
+				@change_y = @guy.getY 
 		end
 	end
 
