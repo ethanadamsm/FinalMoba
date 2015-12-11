@@ -16,7 +16,12 @@ class Healthbar
 	end
 
 	def changehealth(change)
-		@health += change
+		if @health > 0 && @health <= @starthealth
+			@health += change
+		end
+		if @health > @starthealth
+			@health = @starthealth
+		end
 	end
 
 	def update(x, y)
