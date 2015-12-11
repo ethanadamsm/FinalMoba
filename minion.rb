@@ -71,4 +71,8 @@ class Minion
 		@height
 	end
 
+	def getHealth
+		@healthbar.getHealth
+	end
+
 end
