@@ -75,4 +75,8 @@ class Minion
 		@healthbar.getHealth
 	end
 
+	def mouseCollide(mouseX, mouseY)
+		mouseX - @change_x > @x && mouseX - @change_x < @x + @width && mouseY - @change_y > @y && mouseY - @change_y < @y + @height
+	end
+
 end
