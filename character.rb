@@ -20,18 +20,44 @@ class Character
 		@move_x = x
 		@move_y = y
 		@healthbar = Healthbar.new(health)
+		@mousex = 0
+		@mousey = 0
+		@red = false
+		@green = false
+		@greenimage = Gosu::Image.new("green.png")
+		@redimage = Gosu::Image.new("red.png")
 	end
 
 	def draw
 		@image.draw(@x + @change_x, @y + @change_y, 1)
 		@healthbar.draw
+		if @green
+			@greenimage.draw(@x - ((@range - @width) / 2), @y - ((@range - @width) / 2), 1, @range / 100, @range / 100)
+		elsif @red
+			@redimage.draw(@x - ((@range - @width) / 2), @y - ((@range - @width) / 2), 1, @range / 100, @range / 100)
+		end
 	end
 
-	def update(change_x, change_y, players, minions)
+	def update(change_x, change_y, players, minions, mousex, mousey)
 		setChange(change_x, change_y)
 		move
 		battle(players, minions)
 		@healthbar.update(@x - 10 + @change_x, @y - 30 + @change_y)
+		minions.each do |minion|
+			if minion.mouseCollide(mousex, mousex)
+				puts "collide"
+				if @x - ((@range - @width) / 2) < minion.getX - 40 && @x + @width + ((@range - width) / 2) && @y - ((@range - @height) / 2) < minion.getY + 40 && @y + @height + ((@range + @height) / 2) > minion.getY
+					@green = true
+					puts "green"
+				else
+					@red = true
+					puts "red"
+				end
+			else
+				@red = false
+				@green = false
+			end
+		end
 	end
 
 	def setMoveTo(move_x, move_y)
