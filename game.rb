@@ -1,4 +1,5 @@
 require "gosu"
+require "socket"
 require_relative "character"
 require_relative "minion"
 class Game < Gosu::Window
@@ -9,11 +10,20 @@ class Game < Gosu::Window
 		@change_x = 0
 		@change_y = -960
 		@minions = []
-		@guy = Character.new(20, 1320, 100, 50, Gosu::Image.new("guy.png"), 50, 100, 300, 3)
 		@minions.push(Minion.new(40, 40, "top", 1, Gosu::Image.new("minion.png"), 1))
 		@frames = 0
 		@back = 0
 		@backing = false
+		@s = TCPSocket.new("localhost", 2000)
+		line = @s.gets 
+		line = line.split(",")
+		@guy = Character.new(line[0].to_i, line[1].to_i, 100, 50, Gosu::Image.new("guy.png"), 50, 100, 300, 3)
+		if line[0].to_i == 20 
+			@guy2 = Character.new(1850, 20, 100, 50, Gosu::Image.new("guy.png"), 50, 100, 300, 3)
+		else
+			@guy2 = Character.new(20, 1320, 100, 50, Gosu::Image.new("guy.png"), 50, 100, 300, 3)
+		end
+		@line = ""
 	end
 
 	def update
@@ -53,6 +63,8 @@ class Game < Gosu::Window
 		if @guy.getX > 0 && @guy.getX + 50 < 150 && @guy.getY + 100 < 1440 && @guy.getY > 1290
 			@guy.addHealth(1)
 		end 
+		@s.puts "#{@guy.getX},#{@guy.getY}"
+		@line = @s.gets
 	end
 
 	def draw
